@@ -5,10 +5,10 @@ class LevelUpScene extends Phaser.Scene {
 		})
 	}
 	create() {
-		let bg = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'bg')
+		let bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
 		bg.setOrigin(0, 0)
 
-		let txtLevelUp = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, `LEVEL ${level}\nPRESS ENTER`, {
+		let txtLevelUp = this.add.text(400, 300, `LEVEL ${level}\nPRESS ENTER`, {
 			font: '32px couriernew',
 			fill: 'white',
 			align: 'center',

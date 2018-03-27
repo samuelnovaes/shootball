@@ -6,7 +6,7 @@ let level = 1
 let audioTheme
 
 const game = new Phaser.Game({
-	type: Phaser.CANVAS,
+	type: Phaser.AUTO,
 	width: 800,
 	height: 600,
 	parent: 'game',

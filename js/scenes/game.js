@@ -5,6 +5,7 @@ class GameScene extends Phaser.Scene {
 		})
 	}
 	create() {
+		this.paused = false
 		this.speedLevel = (1 + level / 10)
 		this.numEnemies = level
 
@@ -13,10 +14,10 @@ class GameScene extends Phaser.Scene {
 		this.audioGameover = this.sound.add('gameover')
 		this.audioKill = this.sound.add('kill')
 
-		let bg = this.add.tileSprite(0, 0, this.cameras.main.width, this.cameras.main.height, 'bg')
+		let bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
 		bg.setOrigin(0, 0)
 
-		this.player = this.physics.add.sprite(this.cameras.main.width / 2, this.cameras.main.height / 2, 'player')
+		this.player = this.physics.add.sprite(400, 300, 'player')
 		this.player.setOrigin(.5, .5)
 		this.player.body.collideWorldBounds = true
 
@@ -54,30 +55,53 @@ class GameScene extends Phaser.Scene {
 			fontWeight: 'bold'
 		})
 
+		this.pausedView = this.add.text(400, 550, '', {
+			font: '32px couriernew',
+			fill: 'white',
+			fontWeight: 'bold'
+		})
+		this.pausedView.setOrigin(.5, .5)
+
 		this.bounds = this.physics.add.group()
 
 		let boundLeft = this.bounds.create()
-		boundLeft.setPosition(-25, this.cameras.main.height / 2)
-		boundLeft.setSize(50, this.cameras.main.height)
+		boundLeft.setPosition(-25, 300)
+		boundLeft.setSize(50, 600)
 
 		let boundRight = this.bounds.create()
-		boundRight.setPosition(this.cameras.main.width + 25, this.cameras.main.height / 2)
-		boundRight.setSize(50, this.cameras.main.height)
+		boundRight.setPosition(825, 300)
+		boundRight.setSize(50, 600)
 
 		let boundTop = this.bounds.create()
-		boundTop.setPosition(this.cameras.main.width / 2, -25)
-		boundTop.setSize(this.cameras.main.width, 50)
+		boundTop.setPosition(400, -25)
+		boundTop.setSize(800, 50)
 
 		let boundBottom = this.bounds.create()
-		boundBottom.setPosition(this.cameras.main.width / 2, this.cameras.main.height + 25)
-		boundBottom.setSize(this.cameras.main.width, 50)
+		boundBottom.setPosition(400, 625)
+		boundBottom.setSize(800, 50)
 
 		this.spawnEnemies()
 
 		this.cursors = this.input.keyboard.createCursorKeys()
 		this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-		window.onkeydown = null
+		window.onkeydown = e => {
+			if(e.keyCode == 27){
+				this.paused = !this.paused
+				if(this.paused){
+					this.pausedView.setText('PAUSED')
+					audioTheme.pause()
+					this.timer.pause()
+					this.scene.pause()
+				}
+				else {
+					this.scene.resume()
+					this.pausedView.setText('')
+					this.timer.resume()
+					audioTheme.resume()
+				}
+			}
+		}
 	}
 	update() {
 		let left = 0
@@ -116,17 +140,24 @@ class GameScene extends Phaser.Scene {
 		this.physics.overlap(this.enemies, this.player, this.gameOver, null, this)
 	}
 	createEnemy() {
-		let enemy = this.enemies.create(Math.random() * this.cameras.main.width, 0, 'enemy')
+		let enemy = this.enemies.create(Math.random() * 800, 0, 'enemy')
 		enemy.setOrigin(.5, .5)
 		enemy.body.collideWorldBounds = true
 		enemy.body.bounce.set(1)
 		this.physics.velocityFromAngle(10 + Math.random() * 160, 200 * this.speedLevel, enemy.body.velocity)
 	}
-	async spawnEnemies() {
-		for (let i = 0; i < level; i++) {
-			await this.wait()
-			this.createEnemy()
+	async spawnEnemies(){
+		for(let i = 0; i < level; i++){
+			await this.timerPromise()
 		}
+	}
+	timerPromise(){
+		return new Promise((resolve, reject) => {
+			this.timer = new Timer(() => {
+				this.createEnemy()
+				resolve()
+			}, 1000 * (2 / (level * .5)))
+		})
 	}
 	createBullet() {
 		let bullet = this.bullets.create(this.player.x, this.player.y, 'bullet')
@@ -157,10 +188,5 @@ class GameScene extends Phaser.Scene {
 	gameOver() {
 		this.audioGameover.play()
 		this.scene.start('GameOverScene')
-	}
-	wait() {
-		return new Promise((resolve, reject) => {
-			setTimeout(resolve, 1000 * (2 / (level * .5)))
-		})
 	}
 }
