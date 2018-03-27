@@ -132,7 +132,7 @@ class GameScene extends Phaser.Scene {
 			}
 		}
 
-		this.player.body.angularVelocity = (left + right) * 250
+		this.player.body.angularVelocity = this.speedLevel * (left + right) * 200
 
 		this.physics.collide(this.enemies, this.enemies)
 		this.physics.overlap(this.enemies, this.bullets, this.hitEnemy, null, this)
