@@ -5,7 +5,7 @@ class LoadScene extends Phaser.Scene {
 		})
 	}
 	preload() {
-		let txtLoading = this.add.text(400, 250, `LOADING...`, {
+		const txtLoading = this.add.text(400, 250, `LOADING...`, {
 			font: '32px couriernew',
 			fill: 'white',
 			align: 'center',
@@ -13,10 +13,10 @@ class LoadScene extends Phaser.Scene {
 		})
 		txtLoading.setOrigin(.5, .5)
 
-		let progressBg = this.add.sprite(400, 300, 'progressbg')
+		const progressBg = this.add.sprite(400, 300, 'progressbg')
 		progressBg.setOrigin(.5, .5)
 
-		let progress = this.add.sprite(400, 300, 'progress')
+		const progress = this.add.sprite(400, 300, 'progress')
 		progress.setOrigin(.5, .5)
 
 		this.load.on('progress', value => {
@@ -35,7 +35,7 @@ class LoadScene extends Phaser.Scene {
 		this.load.audio('kill', 'audio/kill.mp3')
 	}
 	create() {
-		audioTheme = this.sound.add('theme', {loop: true, volume: .3})
+		audioTheme = this.sound.add('theme', { loop: true, volume: .3 })
 		audioTheme.play()
 		this.scene.start('MenuScene')
 	}

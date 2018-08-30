@@ -9,12 +9,12 @@ class GameScene extends Phaser.Scene {
 		this.speedLevel = (1 + level / 10)
 		this.numEnemies = level
 
-		this.audioGun = this.sound.add('gun', {volume: .5})
+		this.audioGun = this.sound.add('gun', { volume: .5 })
 		this.audioLevelup = this.sound.add('levelup')
 		this.audioGameover = this.sound.add('gameover')
 		this.audioKill = this.sound.add('kill')
 
-		let bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
+		const bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
 		bg.setOrigin(0, 0)
 
 		this.player = this.physics.add.sprite(400, 300, 'player')
@@ -27,7 +27,7 @@ class GameScene extends Phaser.Scene {
 		this.bullets = this.physics.add.group()
 		this.bullets.enableBody = true
 
-		if(level > localStorage.highLevel){
+		if (level > localStorage.highLevel) {
 			localStorage.highLevel = level
 		}
 
@@ -64,19 +64,19 @@ class GameScene extends Phaser.Scene {
 
 		this.bounds = this.physics.add.group()
 
-		let boundLeft = this.bounds.create()
+		const boundLeft = this.bounds.create()
 		boundLeft.setPosition(-25, 300)
 		boundLeft.setSize(50, 600)
 
-		let boundRight = this.bounds.create()
+		const boundRight = this.bounds.create()
 		boundRight.setPosition(825, 300)
 		boundRight.setSize(50, 600)
 
-		let boundTop = this.bounds.create()
+		const boundTop = this.bounds.create()
 		boundTop.setPosition(400, -25)
 		boundTop.setSize(800, 50)
 
-		let boundBottom = this.bounds.create()
+		const boundBottom = this.bounds.create()
 		boundBottom.setPosition(400, 625)
 		boundBottom.setSize(800, 50)
 
@@ -86,9 +86,9 @@ class GameScene extends Phaser.Scene {
 		this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
 		window.onkeydown = e => {
-			if(e.keyCode == 27){
+			if (e.keyCode == 27) {
 				this.paused = !this.paused
-				if(this.paused){
+				if (this.paused) {
 					this.pausedView.setText('PAUSED')
 					audioTheme.pause()
 					this.timer.pause()
@@ -140,18 +140,18 @@ class GameScene extends Phaser.Scene {
 		this.physics.overlap(this.enemies, this.player, this.gameOver, null, this)
 	}
 	createEnemy() {
-		let enemy = this.enemies.create(Math.random() * 800, 0, 'enemy')
+		const enemy = this.enemies.create(Math.random() * 800, 0, 'enemy')
 		enemy.setOrigin(.5, .5)
 		enemy.body.collideWorldBounds = true
 		enemy.body.bounce.set(1)
 		this.physics.velocityFromAngle(10 + Math.random() * 160, 200 * this.speedLevel, enemy.body.velocity)
 	}
-	async spawnEnemies(){
-		for(let i = 0; i < level; i++){
+	async spawnEnemies() {
+		for (let i = 0; i < level; i++) {
 			await this.timerPromise()
 		}
 	}
-	timerPromise(){
+	timerPromise() {
 		return new Promise((resolve, reject) => {
 			this.timer = new Timer(() => {
 				this.createEnemy()
@@ -160,7 +160,7 @@ class GameScene extends Phaser.Scene {
 		})
 	}
 	createBullet() {
-		let bullet = this.bullets.create(this.player.x, this.player.y, 'bullet')
+		const bullet = this.bullets.create(this.player.x, this.player.y, 'bullet')
 		bullet.setOrigin(.5, .5)
 		bullet.rotation = this.player.rotation
 		bullet.scene.physics.velocityFromRotation(bullet.rotation, 1000, bullet.body.velocity)
@@ -182,7 +182,7 @@ class GameScene extends Phaser.Scene {
 			this.scene.start('LevelUpScene')
 		}
 	}
-	hitBound(bound, bullet){
+	hitBound(bound, bullet) {
 		bullet.destroy()
 	}
 	gameOver() {

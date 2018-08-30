@@ -5,10 +5,10 @@ class GameOverScene extends Phaser.Scene {
 		})
 	}
 	create() {
-		let bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
+		const bg = this.add.tileSprite(0, 0, 800, 600, 'bg')
 		bg.setOrigin(0, 0)
 
-		let txtGameOver = this.add.text(400, 300, `GAME OVER\nSCORE: ${score}\nLEVEL: ${level}\nHIGH SCORE: ${localStorage.highScore}\nHIGH LEVEL: ${localStorage.highLevel}\nPRESS ENTER TO PLAY AGAIN\nPRESS ESC TO GO TO MENU`, {
+		const txtGameOver = this.add.text(400, 300, `GAME OVER\nSCORE: ${score}\nLEVEL: ${level}\nHIGH SCORE: ${localStorage.highScore}\nHIGH LEVEL: ${localStorage.highLevel}\nPRESS ENTER TO PLAY AGAIN\nPRESS ESC TO GO TO MENU`, {
 			font: '32px couriernew',
 			fill: 'white',
 			align: 'center',
@@ -22,11 +22,11 @@ class GameOverScene extends Phaser.Scene {
 		window.onkeydown = e => {
 			switch (e.keyCode) {
 				case 13:
-				this.scene.start('LevelUpScene')
-				break
+					this.scene.start('LevelUpScene')
+					break
 				case 27:
-				this.scene.start('MenuScene')
-				break
+					this.scene.start('MenuScene')
+					break
 			}
 		}
 	}
